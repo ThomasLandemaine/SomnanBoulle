@@ -4,9 +4,7 @@ import cv2
 import numpy as np
 import math
 import matplotlib.pyplot as plt
-import sounddevice
 import mediapipe as mp
-import mido
 import time
 from matplotlib import pyplot as plt
 #from numpy import angle
@@ -41,11 +39,6 @@ def angle(a,b,c):
     angle_b = np.arccos(cosine_b)
     return math.floor(np.degrees(angle_b))
 
-#send a note with mido
-def send_note(note, velocity, channel):
-    print(note)
-    msg = mido.Message('note_on', note=note, velocity=velocity, channel=channel)
-
 mp_drawing = mp.solutions.drawing_utils
 mp_holistic = mp.solutions.holistic
 
@@ -67,8 +60,9 @@ with mp_holistic.Holistic(min_detection_confidence=0.5, min_tracking_confidence=
         #mp_holistic.HAND_CONNECTIONS = lancer cette ligne pour savoir ce qu'il se passe. On peut mettre des if ou des = à qui déclenche tel ou tel truc
         # print(results.face_landmarks)
 
+        black= np.zeros([200,250,1],dtype="uint8")
         # Recolor image back to BGR for rendering
-        image = cv2.cvtColor(image, cv2.COLOR_RGB2BGR)
+        image = cv2.cvtColor(black, cv2.COLOR_RGB2BGR)
 
         #draw face landmarks
         #mp_drawing.draw_landmarks(image, results.face_landmarks, mp_holistic.FACE_CONNECTIONS)
