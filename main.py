@@ -25,7 +25,6 @@ def transform_range(value, old_range, new_range):
     return int(scaled)
 
 #midiout selection
-midiout = mido.open_output()
 
 def distance(a, b):
     point1 = np.array([a.x, a.y])
@@ -46,7 +45,6 @@ def angle(a,b,c):
 def send_note(note, velocity, channel):
     print(note)
     msg = mido.Message('note_on', note=note, velocity=velocity, channel=channel)
-    midiout.send(msg)
 
 mp_drawing = mp.solutions.drawing_utils
 mp_holistic = mp.solutions.holistic
@@ -129,18 +127,14 @@ with mp_holistic.Holistic(min_detection_confidence=0.5, min_tracking_confidence=
                 #MAIN DROITE HAUTEUR
                 #send_note(transform_range(y_right_hand, (0, 1.1), (49, 71)), transform_range(y_nose, (0, 1.1), (25, 127)), 0)
                 #ANGLE BRAS DROIT
-                send_note(transform_range(angle_2d_left_arm, (0, 1000), (69, 127)), transform_range(y_left_hand, (0, 2), (45, 127)), 0) #l'erreur vient du scale O to X
                 #DIFFERENCE MAINS
                 #send_note(transform_range(hand_abs, (0, 1.1), (69, 104)), transform_range(hand_abs_y, (0, 1.1), (25, 127)), 1)
                 #ANGLE_BRAS_GAUCHE
                 #print(angle_2d_right_arm)
                 #send_note(transform_range(angle_2d_right_arm, (0, 1000), (69, 127)), 100, 1)
-                send_note(transform_range(angle_2d_right_arm, (0, 1000), (69, 127)), transform_range(y_right_hand, (0, 2), (45, 127)), 1)
                 #DIFFERENCE_GENOUX_MAINS
                 #send_note(transform_range(hand_knee_left_abs_x, (0, 1.1), (69, 104)), transform_range(hand_knee_right_abs_x, (0, 1.1), (45, 127)), 1)
 
-            else:
-                send_note(0, 1, 1)
 
             last_time=time.time()
         cv2.imshow('Raw Webcam Feed', image)
