@@ -46,6 +46,7 @@ cap = cv2.VideoCapture(0) # Number is to find the good webcam
 
 # Initiate holistic Model
 black = np.zeros([200, 250, 1], dtype="uint8")
+white = np.full((500, 500, 3), 255, dtype=np.uint8)
 drawer = cv2.cvtColor(black, cv2.COLOR_RGB2BGR)
 drawer = cv2.resize(drawer, (1600, 900))
 cv2.resizeWindow('drawer', (1600, 900))
@@ -70,43 +71,41 @@ with mp_holistic.Holistic(min_detection_confidence=0.5, min_tracking_confidence=
         #draw face landmarks
         #mp_drawing.draw_landmarks(image, results.face_landmarks, mp_holistic.FACE_CONNECTIONS)
 
+        connections_wanted = frozenset([(16, 18), (14, 16), (12, 14), (11, 12), (11, 13), (13, 15), (15, 17), (24, 26), (26, 28), (28, 30), (30, 32), (23, 25), (25, 27), (27, 29), (29, 31)])
         #Right Hand
-        if (i == 0):
-            i = 0
-
-            mp_drawing.draw_landmarks(
-                image=drawer,
-                landmark_list=results.right_hand_landmarks,
-                connections=mp_holistic.HAND_CONNECTIONS,
-                landmark_drawing_spec=mp_drawing.DrawingSpec(
-                    color=(255, 255, 255),
-                    thickness=0,
-                    circle_radius=0,
-                )
+        mp_drawing.draw_landmarks(
+            image=drawer,
+            landmark_list=results.right_hand_landmarks,
+            connections=mp_holistic.HAND_CONNECTIONS.intersection(connections_wanted),
+            landmark_drawing_spec=mp_drawing.DrawingSpec(
+                color=(255, 255, 255),
+                thickness=0,
+                circle_radius=0,
             )
+        )
         #Left Hand
-            mp_drawing.draw_landmarks(
-                image=drawer,
-                landmark_list=results.left_hand_landmarks,
-                connections=mp_holistic.HAND_CONNECTIONS,
-                landmark_drawing_spec=mp_drawing.DrawingSpec(
-                    color=(255, 255, 255),
-                    thickness=0,
-                    circle_radius=0,
-                )
+        mp_drawing.draw_landmarks(
+            image=drawer,
+            landmark_list=results.left_hand_landmarks,
+            connections=mp_holistic.HAND_CONNECTIONS.intersection(connections_wanted),
+            landmark_drawing_spec=mp_drawing.DrawingSpec(
+                color=(255, 255, 255),
+                thickness=0,
+                circle_radius=0,
             )
+        )
         #Pose detection
-            mp_drawing.draw_landmarks(
-                image=drawer,
-                landmark_list=results.pose_landmarks,
-                connections=mp_holistic.POSE_CONNECTIONS,
-                landmark_drawing_spec=mp_drawing.DrawingSpec(
-                    color=(255, 255, 255),
-                    thickness=0,
-                    circle_radius=0,
-                )
+        mp_drawing.draw_landmarks(
+            image=drawer,
+            landmark_list=results.pose_landmarks,
+            connections=mp_holistic.POSE_CONNECTIONS.intersection(connections_wanted),
+            landmark_drawing_spec=mp_drawing.DrawingSpec(
+                color=(255, 255, 255),
+                thickness=0,
+                circle_radius=0,
             )
-
+        )
+        print(mp_holistic.POSE_CONNECTIONS)
         if (time.time() - last_time) > 0.2:
             if results.pose_landmarks != None:
                 #Positions membres
@@ -165,7 +164,6 @@ with mp_holistic.Holistic(min_detection_confidence=0.5, min_tracking_confidence=
 
             last_time = time.time()
         cv2.imshow('Raw Webcam Feed', drawer)
-        #i += 1
         if cv2.waitKey(10) & 0xFF == ord('q'):
             break
 
