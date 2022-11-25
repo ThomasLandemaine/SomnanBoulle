@@ -45,6 +45,8 @@ mp_holistic = mp.solutions.holistic
 cap = cv2.VideoCapture(0) # Number is to find the good webcam
 
 # Initiate holistic Model
+black = np.zeros([200, 250, 1], dtype="uint8")
+drawer = cv2.cvtColor(black, cv2.COLOR_RGB2BGR)
 with mp_holistic.Holistic(min_detection_confidence=0.5, min_tracking_confidence=0.5) as holistic:
     last_time = time.time()
     while cap.isOpened():
@@ -60,19 +62,17 @@ with mp_holistic.Holistic(min_detection_confidence=0.5, min_tracking_confidence=
         #mp_holistic.HAND_CONNECTIONS = lancer cette ligne pour savoir ce qu'il se passe. On peut mettre des if ou des = à qui déclenche tel ou tel truc
         # print(results.face_landmarks)
 
-        black= np.zeros([200,250,1],dtype="uint8")
         # Recolor image back to BGR for rendering
-        image = cv2.cvtColor(black, cv2.COLOR_RGB2BGR)
 
         #draw face landmarks
         #mp_drawing.draw_landmarks(image, results.face_landmarks, mp_holistic.FACE_CONNECTIONS)
 
         #Right Hand
-        mp_drawing.draw_landmarks(image, results.right_hand_landmarks, mp_holistic.HAND_CONNECTIONS)
+        mp_drawing.draw_landmarks(drawer, results.right_hand_landmarks, mp_holistic.HAND_CONNECTIONS)
         #Left Hand
-        mp_drawing.draw_landmarks(image, results.left_hand_landmarks, mp_holistic.HAND_CONNECTIONS)
+        mp_drawing.draw_landmarks(drawer, results.left_hand_landmarks, mp_holistic.HAND_CONNECTIONS)
         #Pose detection
-        mp_drawing.draw_landmarks(image, results.pose_landmarks, mp_holistic.POSE_CONNECTIONS)
+        mp_drawing.draw_landmarks(drawer, results.pose_landmarks, mp_holistic.POSE_CONNECTIONS)
 
         if (time.time()-last_time) > 0.2:
             if results.pose_landmarks != None:
@@ -131,7 +131,8 @@ with mp_holistic.Holistic(min_detection_confidence=0.5, min_tracking_confidence=
 
 
             last_time=time.time()
-        cv2.imshow('Raw Webcam Feed', image)
+        drawer = cv2.resize(drawer, (500, 500))
+        cv2.imshow('Raw Webcam Feed', drawer)
 
         if cv2.waitKey(10) & 0xFF == ord('q'):
             break
