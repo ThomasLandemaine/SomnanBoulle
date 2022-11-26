@@ -72,7 +72,6 @@ with mp_holistic.Holistic(min_detection_confidence=0.5, min_tracking_confidence=
                 mp_drawing.draw_landmarks(
                     image=drawer,
                     landmark_list=results.right_hand_landmarks,
-                    connections=mp_holistic.HAND_CONNECTIONS.intersection(connections_wanted),
                     landmark_drawing_spec=mp_drawing.DrawingSpec(
                         color=(255, 255, 255),
                         thickness=0,
@@ -83,7 +82,6 @@ with mp_holistic.Holistic(min_detection_confidence=0.5, min_tracking_confidence=
                 mp_drawing.draw_landmarks(
                     image=drawer,
                     landmark_list=results.left_hand_landmarks,
-                    connections=mp_holistic.HAND_CONNECTIONS.intersection(connections_wanted),
                     landmark_drawing_spec=mp_drawing.DrawingSpec(
                         color=(255, 255, 255),
                         thickness=0,
