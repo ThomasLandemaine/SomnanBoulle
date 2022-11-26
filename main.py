@@ -24,6 +24,10 @@ LIGHT_BLUE = (252, 233, 225)
 PINK = (169, 136, 243)
 LIGHT_PINK = (219, 205, 250)
 
+color_tab = [LILA, GREEN, ORANGE, BLUE, PINK]
+light_color_tab = [LIGHT_LILA, LIGHT_GREEN, LIGHT_ORANGE, LIGHT_BLUE, LIGHT_PINK]
+
+
 # Initiate holistic Model
 black = np.zeros([20, 20, 1], dtype="uint8")
 white = np.full((500, 500, 3), 255, dtype=np.uint8)
@@ -55,11 +59,11 @@ with mp_holistic.Holistic(min_detection_confidence=0.5, min_tracking_confidence=
                 results = holistic.process(image)
 
                 connections_wanted = frozenset(
-                    [(24, 26), (26, 28), (28, 30),
+                    [(11, 13), (12, 14), (11, 12), (24, 26), (26, 28), (28, 30),
                      (30, 32), (23, 25), (25, 27), (27, 29), (29, 31)])
-                connection_shoulders = frozenset([(11, 12)])
-                connection_right_hand = frozenset([(16, 18), (14, 16), (12, 14)])
-                connection_left_hand = frozenset([(11, 13), (13, 15), (15, 17)])
+#                connection_shoulders = frozenset([(11, 12)])
+                connection_right_hand = frozenset([(16, 18), (14, 16)])
+                connection_left_hand = frozenset([(13, 15), (15, 17)])
                 
                 
                 # Right Hand
@@ -67,7 +71,7 @@ with mp_holistic.Holistic(min_detection_confidence=0.5, min_tracking_confidence=
                     image=drawer,
                     landmark_list=results.right_hand_landmarks,
                     landmark_drawing_spec=mp_drawing.DrawingSpec(
-                        color=LIGHT_LILA,
+                        color=light_color_tab[sequence],
                         thickness=1,
                         circle_radius=0,
                     )
@@ -78,12 +82,12 @@ with mp_holistic.Holistic(min_detection_confidence=0.5, min_tracking_confidence=
                     landmark_list=results.pose_landmarks,
                     connections=mp_holistic.POSE_CONNECTIONS.intersection(connection_right_hand),
                     landmark_drawing_spec=mp_drawing.DrawingSpec(
-                        color=LIGHT_LILA,
+                        color=light_color_tab[sequence],
                         thickness=0,
                         circle_radius=0,
                     ),
                     connection_drawing_spec=mp_drawing.DrawingSpec(
-                        color=LILA,
+                        color=color_tab[sequence],
                         thickness=1,
                         circle_radius=0,
                     )
@@ -93,7 +97,7 @@ with mp_holistic.Holistic(min_detection_confidence=0.5, min_tracking_confidence=
                     image=drawer,
                     landmark_list=results.left_hand_landmarks,
                     landmark_drawing_spec=mp_drawing.DrawingSpec(
-                        color=LILA,
+                        color=color_tab[sequence],
                         thickness=0,
                         circle_radius=0,
                     )
@@ -104,12 +108,12 @@ with mp_holistic.Holistic(min_detection_confidence=0.5, min_tracking_confidence=
                     landmark_list=results.pose_landmarks,
                     connections=mp_holistic.POSE_CONNECTIONS.intersection(connection_left_hand),
                     landmark_drawing_spec=mp_drawing.DrawingSpec(
-                        color=LIGHT_LILA,
+                        color=light_color_tab[sequence],
                         thickness=0,
                         circle_radius=0,
                     ),
                     connection_drawing_spec=mp_drawing.DrawingSpec(
-                        color=LILA,
+                        color=color_tab[sequence],
                         thickness=1,
                         circle_radius=0,
                     )
@@ -121,12 +125,13 @@ with mp_holistic.Holistic(min_detection_confidence=0.5, min_tracking_confidence=
                     landmark_list=results.pose_landmarks,
                     connections=mp_holistic.POSE_CONNECTIONS.intersection(connections_wanted),
                     landmark_drawing_spec=mp_drawing.DrawingSpec(
-                        color=LIGHT_LILA,
+                        color=light_color_tab[sequence],
                         thickness=0,
                         circle_radius=0,
                     ),
                     connection_drawing_spec=mp_drawing.DrawingSpec(
-                        color=LILA,
+                        color=
+                        color_tab[sequence],
                         thickness=1,
                         circle_radius=0,
                     )
