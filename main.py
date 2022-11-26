@@ -16,6 +16,13 @@ cap = cv2.VideoCapture(0)  # Number is to find the good webcam
 LILA = (243, 79, 124)
 LIGHT_LILA = (248, 151, 177)
 GREEN = (177, 248, 151)
+LIGHT_GREEN = (205, 250, 188)
+ORANGE = (49, 73, 255)
+LIGHT_ORANGE = (105, 136, 243)
+BLUE = (243, 169, 136)
+LIGHT_BLUE = (252, 233, 225)
+PINK = (169, 136, 243)
+LIGHT_PINK = (219, 205, 250)
 
 # Initiate holistic Model
 black = np.zeros([20, 20, 1], dtype="uint8")
