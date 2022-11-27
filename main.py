@@ -33,13 +33,12 @@ drawer = cv2.cvtColor(black, cv2.COLOR_RGB2BGR)
 drawer = cv2.resize(drawer, (1920, 1000))
 
 drawer_shoulders = cv2.cvtColor(black, cv2.COLOR_RGB2BGR)
-drawer_shoulders = cv2.resize(drawer_shoulders, (1920, 1000))
+drawer_shoulders = cv2.resize(drawer, (1920, 1000))
 drawer_right_hand = cv2.cvtColor(black, cv2.COLOR_RGB2BGR)
-drawer_right_hand = cv2.resize(drawer_right_hand, (1920, 1000))
+drawer_right_hand = cv2.resize(drawer, (1920, 1000))
 drawer_left_hand = cv2.cvtColor(black, cv2.COLOR_RGB2BGR)
-drawer_left_hand = cv2.resize(drawer_left_hand, (1920, 1000))
-drawer_legs = cv2.cvtColor(black, cv2.COLOR_RGB2BGR)
-drawer_legs = cv2.resize(drawer_legs, (1920, 1000))
+drawer_left_hand = cv2.resize(drawer, (1920, 1000))
+
 with mp_holistic.Holistic(min_detection_confidence=0.5, min_tracking_confidence=0.5) as holistic:
     session = 0
     while (cap.isOpened()):
@@ -60,12 +59,12 @@ with mp_holistic.Holistic(min_detection_confidence=0.5, min_tracking_confidence=
                 results = holistic.process(image)
 
                 connections_wanted = frozenset(
-                    [(11, 13), (12, 14), (11, 12), (24, 26), (28, 30),
-                     (30, 32), (23, 25), (27, 29), (29, 31)])
+                    [(11, 13), (12, 14), (11, 12), (24, 26), (26, 28), (28, 30),
+                     (30, 32), (23, 25), (25, 27), (27, 29), (29, 31)])
 #                connection_shoulders = frozenset([(11, 12)])
                 connection_right_hand = frozenset([(16, 18), (14, 16)])
                 connection_left_hand = frozenset([(13, 15), (15, 17)])
-                connection_legs = frozenset([(26, 28), (25, 27)])
+
                 
                 # Right Hand
                 mp_drawing.draw_landmarks(
@@ -119,22 +118,6 @@ with mp_holistic.Holistic(min_detection_confidence=0.5, min_tracking_confidence=
                         circle_radius=0,
                     )
                 )
-
-                mp_drawing.draw_landmarks(
-                    image=drawer_legs,
-                    landmark_list=results.pose_landmarks,
-                    connections=mp_holistic.POSE_CONNECTIONS.intersection(connection_legs),
-                    landmark_drawing_spec=mp_drawing.DrawingSpec(
-                        color=light_color_tab[sequence],
-                        thickness=0,
-                        circle_radius=0,
-                    ),
-                    connection_drawing_spec=mp_drawing.DrawingSpec(
-                        color=color_tab[sequence],
-                        thickness=1,
-                        circle_radius=0,
-                    )
-                )
                 # Pose detection
                 
                 mp_drawing.draw_landmarks(
@@ -153,14 +136,13 @@ with mp_holistic.Holistic(min_detection_confidence=0.5, min_tracking_confidence=
                         circle_radius=0,
                     )
                 )
-                drawer_right_hand = cv2.GaussianBlur(drawer_right_hand, (3, 3), 0)
-                drawer_left_hand = cv2.GaussianBlur(drawer_left_hand, (3, 3), 0)
-                drawer_legs = cv2.GaussianBlur(drawer_legs, (3, 3), 0)
+                if (i > 50):
+                    drawer_right_hand = cv2.GaussianBlur(drawer_right_hand, (3, 3), 0)
+                    drawer_left_hand = cv2.GaussianBlur(drawer_left_hand, (3, 3), 0)
                 i += 1
                 print(i)
                 drawer = cv2.addWeighted(drawer, 1, drawer_right_hand, 0.1, 0)
                 drawer = cv2.addWeighted(drawer, 1, drawer_left_hand, 0.1, 0)
-                drawer = cv2.addWeighted(drawer, 1, drawer_legs, 0.1, 0)
                 cv2.namedWindow('drawer', cv2.WND_PROP_FULLSCREEN)
                 cv2.setWindowProperty('drawer', cv2.WND_PROP_FULLSCREEN, cv2.WINDOW_FULLSCREEN)
                 cv2.putText(drawer, picture_save2, (20,20), cv2.FONT_HERSHEY_DUPLEX, 1, light_color_tab[sequence])
@@ -170,14 +152,14 @@ with mp_holistic.Holistic(min_detection_confidence=0.5, min_tracking_confidence=
             time.sleep(5)
             cv2.imwrite(picture_save, drawer)
 
+
             drawer = cv2.imread('black.png')
             drawer_right_hand = cv2.imread('black.png')
             drawer_left_hand = cv2.imread('black.png')
-            drawer_legs = cv2.imread('black.png')
             drawer = cv2.resize(drawer, (1920, 1000))
             drawer_right_hand = cv2.resize(drawer_right_hand, (1920, 1000))
             drawer_left_hand = cv2.resize(drawer_left_hand, (1920, 1000))
-            drawer_legs = cv2.resize(drawer_legs, (1920, 1000))
+
 
             sequence += 1
         session += 1
